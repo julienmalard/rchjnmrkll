@@ -50,14 +50,14 @@ class KutbälPyMC(object):
     def tayaka(ri, rubi):
         if ri.tunujuch is not None:
             tnjch = {r_jlj: ri.tunujuch[r_jlj].tolist() for r_jlj in ri.tunujuch.varnames}
-            with open(rubi + 'tnjch' + '.json', 'w', encoding='utf8') as w:
+            with open(rubi + '_tnjch' + '.json', 'w', encoding='utf8') as w:
                 json.dump(tnjch, w, ensure_ascii=False)
         if len(ri.tunujuch_pa_rtl_jlj):
             wuj_pa_jlj = {
                 rajil: {r_jlj: tnj[r_jlj].tolist() for r_jlj in tnj.varnames}
                 for rajil, tnj in ri.tunujuch_pa_rtl_jlj.items()
             }
-            with open(rubi + 'tnjch_pa_rtl_jlj' + '.json', 'w', encoding='utf8') as w:
+            with open(rubi + '_tnjch_pa_rtl_jlj' + '.json', 'w', encoding='utf8') as w:
                 json.dump(wuj_pa_jlj, w, ensure_ascii=False)
 
     def wachibäl(ri, ochochibäl=''):
