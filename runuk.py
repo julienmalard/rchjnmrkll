@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import pymc3 as pm
 import scipy.stats as estad
@@ -9,8 +11,11 @@ class KutbälPyMC(object):
     def __init__(ri):
         ri.achlajil = set()
         ri.tunujuch = None
+        ri.tunujuch_pa_rtl_jlj = {}
 
     def ruyaik_achlajil(ri, achljl):
+        if isinstance(achljl, Achlajil):
+            achljl = [achljl]
 
         for ach in achljl:
             ri.achlajil.add(ach)
@@ -28,7 +33,7 @@ class KutbälPyMC(object):
             ri._chmrsxk_kutbäl()
             ri.tunujuch = pm.sample(**wuj_rbyl_rynl)
 
-    def kaibäl(ri):
+    def wachibäl(ri, ochochibäl=''):
 
         for r_jlj in ri.tunujuch.varnames:
 
@@ -37,26 +42,38 @@ class KutbälPyMC(object):
 
             if len(tzij.shape) == 2:
                 for i in range(tzij.shape[1]):
-                    ri._ruwachibäl_tunujuch(x, tzij[:, i], str(r_jlj) + str(i))
+                    ri._ruwachibäl_tunujuch(x, tzij[:, i], str(r_jlj) + str(i), ochocibäl=ochochibäl)
             else:
-                ri._ruwachibäl_tunujuch(x, tzij, str(r_jlj))
+                ri._ruwachibäl_tunujuch(x, tzij, str(r_jlj), ochocibäl=ochochibäl)
 
     @staticmethod
-    def _ruwachibäl_tunujuch(x, tzij, rubi):
+    def _ruwachibäl_tunujuch(x, tzij, rubi, ochocibäl=''):
 
         fig = Figura()
         TelaFigura(fig)
         etajuch = fig.subplots(1, 2)
 
-        y = estad.gaussian_kde(tzij)(x)
-
-        etajuch[0].plot(x, y, 'b-', lw=2, alpha=0.6)
         etajuch[0].set_title('Jachonem')
-
-        etajuch[1].plot(tzij)
         etajuch[1].set_title("Tunujuch'")
+
+        def ruyaik_juch(tz, rb_tz=None):
+            y = estad.gaussian_kde(tz)(x)
+            etajuch[0].plot(x, y, 'b-', lw=2, alpha=0.6, label=rb_tz)
+            etajuch[1].plot(tz)
+
+        if isinstance(tzij, dict):
+            for rb, tzj in tzij.items():
+                ruyaik_juch(tzj, rb)
+            fig.legend()
+
+        else:
+            ruyaik_juch(tz=tzij)
+
         fig.suptitle(rubi)
-        fig.savefig('wchbl_' + rubi + '.png')
+        rubi_wuj = 'wchbl_' + rubi + '.png'
+        if not os.path.isdir(ochocibäl):
+            os.makedirs(ochocibäl)
+        fig.savefig(os.path.join(ochocibäl, rubi_wuj))
 
     def _chmrsxk_kutbäl(ri):
         ruwuj_retal_jaloj = {r: None for a in ri.achlajil for r in a.retal_jaloj()}
@@ -98,10 +115,7 @@ class Rujunamil(object):
             )
 
             if rnjml is None:
-                b = pm.Normal(
-                    name='junelïk_' + str(jlj), mu=0, sd=100
-                )
-                rnjml = a * retal_jaloj[rynl] + b
+                rnjml = a * retal_jaloj[rynl]
             else:
                 rnjml = rnjml + a * retal_jaloj[rynl]
 

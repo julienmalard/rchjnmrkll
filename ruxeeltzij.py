@@ -16,6 +16,7 @@ class RuxeelTzij(object):
             j.ruyaik_tzij(ri.tzij[rubi].values)
 
     def _rusikij_tzij(ri):
+
         with open(ri.yakbäl, 'r') as w:
             rusikinel = csv.DictReader(w)
             wuj = {j: [] for j in ri.r_jlj}
@@ -25,4 +26,5 @@ class RuxeelTzij(object):
 
             wuj_pd = pd.DataFrame(wuj)
             wuj_pd.dropna(inplace=True)
+
         return wuj_pd

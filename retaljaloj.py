@@ -39,7 +39,10 @@ class RetalCholajibäl(RetalJaloj):
 class RetalWajun(RetalJaloj):
     def ruqaxik_pymc(ri, rnjml):
         if rnjml is not None:
-            return pm.Bernoulli(logit_p=rnjml, observed=ri.tzij)
+            b = pm.Normal(
+                name='junelïk_' + str(ri), mu=0, sd=100
+            )
+            return pm.Bernoulli(name=str(ri), logit_p=rnjml + b, observed=ri.tzij)
         else:
             if ri.tzij is not None:
                 return ri.tzij
@@ -58,4 +61,7 @@ class RetalCholanem(RetalJaloj):
             return ri.tzij
 
         rjchnm = pm.HalfNormal(name='sg_' + str(ri), sd=10)  # rujechunem chijun
-        return pm.Normal(name=str(ri), mu=rnjml, sd=rjchnm, observed=ri.tzij)
+        b = pm.Normal(
+            name='junelïk_' + str(ri), mu=0, sd=100
+        )
+        return pm.Normal(name=str(ri), mu=rnjml + b, sd=rjchnm, observed=ri.tzij)
