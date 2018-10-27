@@ -1,5 +1,6 @@
 from retaljaloj import RetalCholajibäl, RetalWajun, RetalCholanem
-from runuk import KutbälPyMC, Achlajil
+from kutbäl import KutbälPyMC
+from achlajil import Achlajil
 from ruxeeltzij import RuxeelTzij
 
 ktbl = KutbälPyMC()
@@ -54,10 +55,12 @@ ktbl.ruyaik_achlajil(
     [
         ach_mbl_ruq, ach_mbl_tjxk, ach_mbl_ixq, ach_ryn_ixq, ach_mbl_ryn, ach_mbl_kxl, ach_tjx_kxl, ach_tjx_ruq,
         ach_kxl_ruq,
-        # ach_kxt_kxl, ach_kxt_ruq, ach_tjx_kxt, ach_mbl_kxt, ach_mcr_ixq, ach_mcr_kxl, ach_mcr_kxt,
-        # ach_mcr_ruq, ach_mcr_mbl, ach_mbl_ruq
+        ach_kxt_kxl, ach_kxt_ruq, ach_tjx_kxt, ach_mbl_kxt, ach_mcr_ixq, ach_mcr_kxl, ach_mcr_kxt,
+        ach_mcr_ruq, ach_mcr_mbl, ach_mbl_ruq
     ]
 )
 
-ktbl.rubeyalam(a_poroj=1000)
+ktbl.rubeyalam(a_poroj=1000, ruxeel_tzij=tzij_iximulew, pa_rtl_jlj=ixöq)
+ktbl.rubeyalam(a_poroj=1000, ruxeel_tzij=tzij_iximulew)
 ktbl.wachibäl("kaib'äl")
+ktbl.tayaka("nab'ey samäj")
