@@ -13,7 +13,7 @@ class RuxeelTzij(object):
         ri.tzij = ri._rusikij_tzij()
 
         for rubi, j in ri.r_jlj.items():
-            j.ruyaik_tzij(ri.tzij[rubi])
+            j.ruyaik_tzij(ri.tzij[rubi].values)
 
     def _rusikij_tzij(ri):
         with open(ri.yakbäl, 'r') as w:

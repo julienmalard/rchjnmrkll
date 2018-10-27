@@ -1,4 +1,3 @@
-import numpy as np
 import pymc3 as pm
 
 
@@ -31,7 +30,7 @@ class RetalCholajibäl(RetalJaloj):
 
     def ruqaxik_pymc(ri, rnjml):
         qupinïk = pm.Normal(
-            name='ruqupinïk_' + str(ri), mu=0, sd=10, shape=ri.ruchlnl, testval=np.zeros(ri.ruchlnl),
+            name='ruqupinïk_' + str(ri), mu=[-1, 0, 1], sd=10, shape=ri.ruchlnl-1,
             transform=pm.distributions.transforms.ordered
         )
         return pm.OrderedLogistic(name=str(ri), cutpoints=qupinïk, eta=rnjml, observed=ri.tzij)
@@ -58,17 +57,5 @@ class RetalCholanem(RetalJaloj):
         if rnjml is None:
             return ri.tzij
 
-        if nmjchl is None:
-            if nmlxl is None:
-                rukexonem = None
-            else:
-                rukexonem = pm.distributions.transforms.upperbound(nmlxl)
-
-        else:
-            if nmlxl is None:
-                rukexonem = pm.distributions.transforms.lowerbound(nmjchl)
-            else:
-                rukexonem = pm.distributions.transforms.interval(nmjchl, nmlxl)
-
-        rjchnm = pm.HalfNormal(name='sg_' + str(ri), sd=10000)  # rujechunem chijun
-        return pm.Normal(name=str(ri), mu=rnjml, sd=rjchnm, observed=ri.tzij, transform=rukexonem)
+        rjchnm = pm.HalfNormal(name='sg_' + str(ri), sd=10)  # rujechunem chijun
+        return pm.Normal(name=str(ri), mu=rnjml, sd=rjchnm, observed=ri.tzij)
