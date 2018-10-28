@@ -3,12 +3,10 @@ import os
 
 import numpy as np
 import pymc3 as pm
-import scipy.stats as estad
-from matplotlib.backends.backend_agg import FigureCanvasAgg as TelaFigura
-from matplotlib.figure import Figure as Figura
 
 from achlajil import Achlajil
 from rujunamil import Rujunamil
+from wachibäl import wchbl_tunujuch, wchbl_sankey
 
 
 class KutbälPyMC(object):
@@ -47,83 +45,45 @@ class KutbälPyMC(object):
                     ri._chmrsxk_kutbäl(elesaj=pa_rtl_jlj)
                     ri.tunujuch_pa_rtl_jlj[str(rajil)] = pm.sample(**wuj_rbyl_rynl)
 
-    def tayaka(ri, rubi):
+    def tayaka(ri, rubi, ochochibäl=''):
+
+        if not os.path.isdir(ochochibäl):
+            os.makedirs(ochochibäl)
+
         if ri.tunujuch is not None:
             tnjch = {r_jlj: ri.tunujuch[r_jlj].tolist() for r_jlj in ri.tunujuch.varnames}
-            with open(rubi + '_tnjch' + '.json', 'w', encoding='utf8') as w:
+            rb_tnjch = rubi + '_tnjch' + '.json'
+            if ochochibäl is not None:
+                rb_tnjch = os.path.join(ochochibäl, rb_tnjch)
+            with open(rb_tnjch, 'w', encoding='utf8') as w:
                 json.dump(tnjch, w, ensure_ascii=False)
         if len(ri.tunujuch_pa_rtl_jlj):
             wuj_pa_jlj = {
                 rajil: {r_jlj: tnj[r_jlj].tolist() for r_jlj in tnj.varnames}
                 for rajil, tnj in ri.tunujuch_pa_rtl_jlj.items()
             }
-            with open(rubi + '_tnjch_pa_rtl_jlj' + '.json', 'w', encoding='utf8') as w:
+            rb_pa_rtl_jlj = rubi + '_tnjch_pa_rtl_jlj' + '.json'
+            if ochochibäl is not None:
+                rb_pa_rtl_jlj = os.path.join(ochochibäl, rb_pa_rtl_jlj)
+            with open(rb_pa_rtl_jlj, 'w', encoding='utf8') as w:
                 json.dump(wuj_pa_jlj, w, ensure_ascii=False)
 
-    def wachibäl(ri, ochochibäl=''):
+    def wachibäl_tnjch(ri, ochochibäl=''):
 
         if ri.tunujuch is not None:
-            for r_jlj in ri.tunujuch.varnames:
-
-                tzij = ri.tunujuch[r_jlj]
-                x = np.arange(tzij.min(), tzij.max(), (tzij.max() - tzij.min()) / 1000)
-
-                if len(tzij.shape) == 2:
-                    for i in range(tzij.shape[1]):
-                        ri._ruwachibäl_tunujuch(x, tzij[:, i], str(r_jlj) + str(i), ochochibäl=ochochibäl)
-                else:
-                    ri._ruwachibäl_tunujuch(x, tzij, str(r_jlj), ochochibäl=ochochibäl)
+            wuj_tnjch = {r_jlj: ri.tunujuch[r_jlj] for r_jlj in ri.tunujuch.varnames}
+            wchbl_tunujuch(wuj_tnjch, ochochibäl=ochochibäl)
 
         if len(ri.tunujuch_pa_rtl_jlj):
-            retal_jaloj = list(ri.tunujuch_pa_rtl_jlj.values())[0].varnames
-            for r_jlj in retal_jaloj:
-                wuj = {}
-                kiy = False
-                for rajil, tnjch in ri.tunujuch_pa_rtl_jlj.items():
-                    tzij = tnjch[r_jlj]
-                    wuj[rajil] = tzij
-                    kiy = tzij.shape
+            wuj_tnjch = {
+                rajil: {r_jlj: w_rajil[r_jlj] for r_jlj in w_rajil.varnames}
+                for rajil, w_rajil in ri.tunujuch_pa_rtl_jlj.items()
+            }
 
-                nmchjl = min(tz.min() for tz in wuj.values())
-                nmlxl = max(tz.max() for tz in wuj.values())
-                x = np.arange(nmchjl, nmlxl, (nmlxl - nmchjl) / 1000)
-                if len(kiy) == 2:
-                    for i in range(kiy[1]):
-                        ri._ruwachibäl_tunujuch(
-                            x, {raj: wuj[raj][:, i] for raj in wuj},
-                            rubi='pajlj_' + str(r_jlj) + str(i), ochochibäl=ochochibäl
-                        )
-                else:
-                    ri._ruwachibäl_tunujuch(x=x, tzij=wuj, rubi='pajlj_' + str(r_jlj), ochochibäl=ochochibäl)
+            wchbl_tunujuch(wuj_tnjch, ochochibäl=ochochibäl, pa_rtl_jlj=True)
 
-    @staticmethod
-    def _ruwachibäl_tunujuch(x, tzij, rubi, ochochibäl=''):
-
-        fig = Figura()
-        TelaFigura(fig)
-        etajuch = fig.subplots(1, 2)
-
-        etajuch[0].set_title('Jachonem')
-        etajuch[1].set_title("Tunujuch'")
-
-        def ruyaik_juch(tz, rb_tz=None):
-            y = estad.gaussian_kde(tz)(x)
-            etajuch[0].plot(x, y, 'b-', lw=2, alpha=0.6, label=rb_tz, color=None)
-            etajuch[1].plot(tz)
-
-        if isinstance(tzij, dict):
-            for rb, tzj in tzij.items():
-                ruyaik_juch(tzj, rb)
-            fig.legend()
-
-        else:
-            ruyaik_juch(tz=tzij)
-
-        fig.suptitle(rubi)
-        rubi_wuj = 'wchbl_' + rubi + '.png'
-        if not os.path.isdir(ochochibäl):
-            os.makedirs(ochochibäl)
-        fig.savefig(os.path.join(ochochibäl, rubi_wuj))
+    def wachibäl_sankey(ri, ochochibäl=''):
+        raise NotImplementedError
 
     def _chmrsxk_kutbäl(ri, elesaj=None):
         if elesaj is None:

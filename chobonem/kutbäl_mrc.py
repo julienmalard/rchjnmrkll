@@ -1,6 +1,6 @@
-from retaljaloj import RetalCholajibäl, RetalWajun, RetalCholanem
-from kutbäl import KutbälPyMC
 from achlajil import Achlajil
+from kutbäl import KutbälPyMC
+from retaljaloj import RetalCholajibäl, RetalWajun, RetalCholanem, RetalCholanil
 from ruxeeltzij import RuxeelTzij
 
 ktbl = KutbälPyMC()
@@ -14,6 +14,7 @@ ixöq = RetalWajun("ixöq")
 ruyon = RetalWajun('ruyon')
 kaxlan = RetalWajun('kaxlan')
 kaxlan_tzij = RetalWajun('kaxlan tzij')
+perulew = RetalCholanil('perulew')
 
 ach_mcr_mbl = Achlajil(MCR, mebail)
 ach_mcr_ruq = Achlajil(MCR, ruqa)
@@ -51,7 +52,8 @@ tzij_iximulew = RuxeelTzij(
         'jefa.mujer': ixöq,
         'solteroa': ruyon,
         'etnia.cstlñ': kaxlan,
-        'leng.frec.cstlñ': kaxlan_tzij
+        'leng.frec.cstlñ': kaxlan_tzij,
+        'territorio': perulew
     }
 )
 
@@ -63,8 +65,3 @@ ktbl.ruyaik_achlajil(
         ach_mcr_ruq, ach_mcr_mbl, ach_mbl_ruq
     ]
 )
-
-ktbl.rubeyalam(a_poroj=1000, ruxeel_tzij=tzij_iximulew, pa_rtl_jlj=ixöq)
-ktbl.rubeyalam(a_poroj=1000, ruxeel_tzij=tzij_iximulew)
-ktbl.wachibäl("kaib'äl")
-ktbl.tayaka("nab'ey samäj")

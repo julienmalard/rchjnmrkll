@@ -16,12 +16,12 @@ class RetalJaloj(object):
         return ri.rubi
 
 
-# class RetalCholanil(RetalJaloj):
-#     def ruqaxik_pymc(ri, rnjml):
-#         if rnjml is not None:
-#             raise TypeError
-#         else:
-#             raise NotImplementedError
+class RetalCholanil(RetalJaloj):
+    def ruqaxik_pymc(ri, rnjml):
+        if rnjml is not None:
+            raise TypeError
+        else:
+            raise NotImplementedError
 
 class RetalCholajibäl(RetalJaloj):
     def __init__(ri, rubi, ruchlnl):
