@@ -73,7 +73,7 @@ def _wchbl_tunujuch(x, tzij, rubi, ochochibäl):
     fig.savefig(os.path.join(ochochibäl, rubi_wuj))
 
 
-def wchbl_sankey(tnjch, ochochibäl='', pa_rtl_jlj=False):
+def wchbl_sankey(tnjch, kutbäl, ochochibäl='', pa_rtl_jlj=False):
     if isinstance(tnjch, str):
         tnjch = _rujaqïk_json(tnjch)
 
@@ -81,7 +81,7 @@ def wchbl_sankey(tnjch, ochochibäl='', pa_rtl_jlj=False):
         os.makedirs(ochochibäl)
 
     rubi = "rutojtob'enïk"
-
+    retal_jaloj = kutbäl.retal_jaloj()
     tzij = dict(
         type='sankey',
         node=dict(

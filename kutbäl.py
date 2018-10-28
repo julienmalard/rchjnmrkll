@@ -90,6 +90,9 @@ class KutbälPyMC(object):
     def wachibäl_sankey(ri, ochochibäl=''):
         raise NotImplementedError
 
+    def retal_jaloj(ri):
+        return {Aj for j in a}
+
     def _chmrsxk_kutbäl(ri, elesaj=None):
         if elesaj is None:
             achlajil = ri.achlajil
