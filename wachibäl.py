@@ -80,6 +80,8 @@ def wchbl_sankey(tnjch, ochochibäl='', pa_rtl_jlj=False):
     if len(ochochibäl) and not os.path.isdir(ochochibäl):
         os.makedirs(ochochibäl)
 
+    rubi = "rutojtob'enïk"
+
     tzij = dict(
         type='sankey',
         node=dict(
@@ -90,23 +92,23 @@ def wchbl_sankey(tnjch, ochochibäl='', pa_rtl_jlj=False):
                 width=0.5
             ),
             label=["A1", "A2", "B1", "B2", "C1", "C2"],
-            color=["blue", "blue", "blue", "blue", "blue", "blue"]
+            color=["blue", "green", "orange", "red", "blue", "blue"]
         ),
         link=dict(
-            source=[0, 1, 0, 2, 3, 3],
-            target=[2, 3, 3, 4, 4, 5],
-            value=[8, 4, 2, 8, 4, 2]
+            source=[0, 0, 1, 0, 2, 3, 3],
+            target=[2, 5, 3, 3, 4, 4, 5],
+            value=[8, 3, 4, 2, 8, 4, 2]
         ))
     rbyl = dict(
-        title="Basic Sankey Diagram",
+        title=rubi,
         font=dict(
             size=10
         )
     )
     wchbl = dict(data=[tzij], layout=rbyl)
-    rubi = "rutojtob'enïk"
+
     py.plot(
-        wchbl, image='jpeg', filename=os.path.join(ochochibäl, rubi) + '.html', image_filename=rubi,
+        wchbl, image='jpeg', filename=os.path.join(ochochibäl, rubi) + '.html', image_filename='rtjtbnk',
         show_link=False, auto_open=False
     )
 

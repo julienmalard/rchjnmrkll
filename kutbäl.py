@@ -68,19 +68,24 @@ class KutbälPyMC(object):
             with open(rb_pa_rtl_jlj, 'w', encoding='utf8') as w:
                 json.dump(wuj_pa_jlj, w, ensure_ascii=False)
 
-    def wachibäl_tnjch(ri, ochochibäl=''):
+    def wachibäl(ri, ochochibäl='', rubeyal='tnjch'):
 
         if ri.tunujuch is not None:
             wuj_tnjch = {r_jlj: ri.tunujuch[r_jlj] for r_jlj in ri.tunujuch.varnames}
-            wchbl_tunujuch(wuj_tnjch, ochochibäl=ochochibäl)
+            if rubeyal == 'tnjch':
+                wchbl_tunujuch(wuj_tnjch, ochochibäl=ochochibäl)
+            elif rubeyal == 'sankey':
+                wchbl_sankey(wuj_tnjch, ochochibäl=ochochibäl)
 
         if len(ri.tunujuch_pa_rtl_jlj):
             wuj_tnjch = {
                 rajil: {r_jlj: w_rajil[r_jlj] for r_jlj in w_rajil.varnames}
                 for rajil, w_rajil in ri.tunujuch_pa_rtl_jlj.items()
             }
-
-            wchbl_tunujuch(wuj_tnjch, ochochibäl=ochochibäl, pa_rtl_jlj=True)
+            if rubeyal == 'tnjch':
+                wchbl_tunujuch(wuj_tnjch, ochochibäl=ochochibäl, pa_rtl_jlj=True)
+            elif rubeyal == 'sankey':
+                wchbl_sankey(wuj_tnjch, ochochibäl=ochochibäl, pa_rtl_jlj=True)
 
     def wachibäl_sankey(ri, ochochibäl=''):
         raise NotImplementedError
