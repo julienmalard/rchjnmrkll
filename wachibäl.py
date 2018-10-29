@@ -3,6 +3,7 @@ import os
 
 import numpy as np
 import plotly.offline as py
+import seaborn as sns
 from matplotlib.backends.backend_agg import FigureCanvasAgg as TelaFigura
 from matplotlib.figure import Figure as Figura
 from scipy import stats as estad
@@ -73,7 +74,7 @@ def _wchbl_tunujuch(x, tzij, rubi, ochochibäl):
     fig.savefig(os.path.join(ochochibäl, rubi_wuj))
 
 
-def wchbl_sankey(tnjch, kutbäl, ochochibäl='', pa_rtl_jlj=False):
+def wchbl_sankey(tnjch, kutbäl, ochochibäl='', pa_rtl_jlj=None):
     if isinstance(tnjch, str):
         tnjch = _rujaqïk_json(tnjch)
 
@@ -81,7 +82,37 @@ def wchbl_sankey(tnjch, kutbäl, ochochibäl='', pa_rtl_jlj=False):
         os.makedirs(ochochibäl)
 
     rubi = "rutojtob'enïk"
-    retal_jaloj = kutbäl.retal_jaloj()
+
+    if pa_rtl_jlj is None:
+        _wchbl_sankey(tnjch, kutbäl, rubi=rubi, ochochibäl=ochochibäl)
+    else:
+        for rjl, tnj in tnjch.items():
+            _wchbl_sankey(tnj, kutbäl, rubi=rubi + str(rjl), elesaj=pa_rtl_jlj, ochochibäl=ochochibäl)
+
+
+def _wchbl_sankey(tnjch, kutbäl, rubi, ochochibäl, elesaj=None):
+    retal_jaloj = [x for x in kutbäl.retal_jaloj() if str(x) != elesaj]
+
+    ruxeel = [retal_jaloj.index(a.ruyonil) for a in kutbäl.achlajil if elesaj not in [str(a.ruyonil), str(a.meruyonil)]]
+    chuwäch = [
+        retal_jaloj.index(a.meruyonil) for a in kutbäl.achlajil if elesaj not in [str(a.ruyonil), str(a.meruyonil)]
+    ]
+
+    rajil = [
+        np.abs(tnjch[f'rutikik_{retal_jaloj[ryn]}_chwch_{retal_jaloj[mryn]}'].mean())
+        for ryn, mryn in zip(ruxeel, chuwäch)
+    ]
+    alphas = [
+        np.mean(np.sign(tnjch[f'rutikik_{retal_jaloj[ryn]}_chwch_{retal_jaloj[mryn]}']) == np.sign(rjl))
+        for ryn, mryn, rjl in zip(ruxeel, chuwäch, rajil)
+    ]
+
+    rubonil = [r for r in sns.color_palette('Dark2', len(retal_jaloj))]
+    rubonil_jlj = [f'rgb({int(r[0]*255)}, {int(r[1]*255)}, {int(r[2]*255)})' for r in rubonil]
+    rubonil_achljl = [
+        f'rgba({int(rubonil[j][0]*255)}, {int(rubonil[j][1]*255)}, {int(rubonil[j][2]*255)}, {a*.8})'
+        for j, a in zip(ruxeel, alphas)
+    ]
     tzij = dict(
         type='sankey',
         node=dict(
@@ -91,13 +122,14 @@ def wchbl_sankey(tnjch, kutbäl, ochochibäl='', pa_rtl_jlj=False):
                 color="black",
                 width=0.5
             ),
-            label=["A1", "A2", "B1", "B2", "C1", "C2"],
-            color=["blue", "green", "orange", "red", "blue", "blue"]
+            label=[str(j) for j in retal_jaloj],
+            color=rubonil_jlj
         ),
         link=dict(
-            source=[0, 0, 1, 0, 2, 3, 3],
-            target=[2, 5, 3, 3, 4, 4, 5],
-            value=[8, 3, 4, 2, 8, 4, 2]
+            source=ruxeel,
+            target=chuwäch,
+            value=rajil,
+            color=rubonil_achljl
         ))
     rbyl = dict(
         title=rubi,

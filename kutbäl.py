@@ -91,7 +91,7 @@ class KutbälPyMC(object):
         raise NotImplementedError
 
     def retal_jaloj(ri):
-        return {Aj for j in a}
+        return {j for a in ri.achlajil for j in (a.meruyonil, a.ruyonil)}
 
     def _chmrsxk_kutbäl(ri, elesaj=None):
         if elesaj is None:
