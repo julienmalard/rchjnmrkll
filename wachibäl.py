@@ -74,7 +74,7 @@ def _wchbl_tunujuch(x, tzij, rubi, ochochibäl):
     fig.savefig(os.path.join(ochochibäl, rubi_wuj))
 
 
-def wchbl_sankey(tnjch, kutbäl, ochochibäl='', pa_rtl_jlj=None):
+def wchbl_sankey(tnjch, kutbäl, rxl_tzij, ochochibäl='', pa_rtl_jlj=None):
     if isinstance(tnjch, str):
         tnjch = _rujaqïk_json(tnjch)
 
@@ -84,33 +84,60 @@ def wchbl_sankey(tnjch, kutbäl, ochochibäl='', pa_rtl_jlj=None):
     rubi = "rutojtob'enïk"
 
     if pa_rtl_jlj is None:
-        _wchbl_sankey(tnjch, kutbäl, rubi=rubi, ochochibäl=ochochibäl)
+        _wchbl_sankey(tnjch, kutbäl, rubi=rubi, rxl_tzj=rxl_tzij, ochochibäl=ochochibäl)
     else:
         for rjl, tnj in tnjch.items():
-            _wchbl_sankey(tnj, kutbäl, rubi=rubi + str(rjl), elesaj=pa_rtl_jlj, ochochibäl=ochochibäl)
+            _wchbl_sankey(
+                tnj, kutbäl, rubi=rubi + str(rjl), rxl_tzj=rxl_tzij, elesaj=pa_rtl_jlj, ochochibäl=ochochibäl
+            )
 
 
-def _wchbl_sankey(tnjch, kutbäl, rubi, ochochibäl, elesaj=None):
+def _wchbl_sankey(tnjch, kutbäl, rubi, rxl_tzj, ochochibäl, elesaj=None):
     retal_jaloj = [x for x in kutbäl.retal_jaloj() if str(x) != elesaj]
 
-    ruxeel = [retal_jaloj.index(a.ruyonil) for a in kutbäl.achlajil if elesaj not in [str(a.ruyonil), str(a.meruyonil)]]
-    chuwäch = [
-        retal_jaloj.index(a.meruyonil) for a in kutbäl.achlajil if elesaj not in [str(a.ruyonil), str(a.meruyonil)]
-    ]
+    achlajil = [a for a in kutbäl.achlajil if elesaj not in [str(a.ruyonil), str(a.meruyonil)]]
+    ruxeel = np.array(
+        [retal_jaloj.index(a.ruyonil) for a in achlajil])
+    chuwäch = np.array([
+        retal_jaloj.index(a.meruyonil) for a in achlajil
+    ])
 
-    rajil = [
-        np.abs(tnjch[f'rutikik_{retal_jaloj[ryn]}_chwch_{retal_jaloj[mryn]}'].mean())
+    rajil = np.array([
+        tnjch[f'rutikik_{retal_jaloj[ryn]}_chwch_{retal_jaloj[mryn]}'].mean()
         for ryn, mryn in zip(ruxeel, chuwäch)
-    ]
+    ])
+
     alphas = [
         np.mean(np.sign(tnjch[f'rutikik_{retal_jaloj[ryn]}_chwch_{retal_jaloj[mryn]}']) == np.sign(rjl))
         for ryn, mryn, rjl in zip(ruxeel, chuwäch, rajil)
     ]
 
+    rajil = np.abs(rajil)
+    rajil *= np.array([np.std(rxl_tzj[retal_jaloj[ryn]]) for ryn in ruxeel])
+
+    runimilem = {jlj: None for jlj in retal_jaloj}
+    while any(rnml is None for rnml in runimilem.values()):
+        for jlj in [j for j in retal_jaloj if runimilem[j] is None]:
+            i_jlj = retal_jaloj.index(jlj)
+            jlj_mrynl = [a.meruyonil for a in achlajil if a.ruyonil is jlj]
+            kinimilem_mrynl = [runimilem[j] for j in jlj_mrynl]
+            if all([nmlm is not None for nmlm in kinimilem_mrynl]):
+                rjl = rajil[
+                    np.where(np.logical_and(ruxeel == i_jlj,
+                                            np.isin(chuwäch, [retal_jaloj.index(mryn) for mryn in jlj_mrynl])))
+
+                ]
+                rnmlm = 1 if not len(kinimilem_mrynl) else np.sum(kinimilem_mrynl * rjl)
+                runimilem[jlj] = rnmlm
+
+                i_chw = np.where(chuwäch == i_jlj)
+                knjl = np.sum(rajil[i_chw])
+                rajil[i_chw] *= rnmlm / knjl
     rubonil = [r for r in sns.color_palette('Dark2', len(retal_jaloj))]
     rubonil_jlj = [f'rgb({int(r[0]*255)}, {int(r[1]*255)}, {int(r[2]*255)})' for r in rubonil]
+
     rubonil_achljl = [
-        f'rgba({int(rubonil[j][0]*255)}, {int(rubonil[j][1]*255)}, {int(rubonil[j][2]*255)}, {a*.8})'
+        f'rgba({int(rubonil[j][0]*255)}, {int(rubonil[j][1]*255)}, {int(rubonil[j][2]*255)}, {a*.7})'
         for j, a in zip(ruxeel, alphas)
     ]
     tzij = dict(
