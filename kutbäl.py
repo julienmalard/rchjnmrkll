@@ -40,6 +40,7 @@ class KutbälPyMC(object):
         else:
             ri.tunujuch_pa_rtl_jlj.clear()
             for rajil in np.unique(ruxeel_tzij[pa_rtl_jlj]):
+                print(rajil)
                 ruxeel_tzij.ruyaik_tzij_jlj(chuyu=(pa_rtl_jlj, rajil))
                 with pm.Model():
                     ri._chmrsxk_kutbäl(elesaj=pa_rtl_jlj)
@@ -97,16 +98,16 @@ class KutbälPyMC(object):
         if elesaj is None:
             achlajil = ri.achlajil
         else:
-            achlajil = [a for a in ri.achlajil if a.ruyonil is not elesaj and a.meyuronil is not elesaj]
+            achlajil = [a for a in ri.achlajil if a.ruyonil is not elesaj and a.meruyonil is not elesaj]
         ruwuj_retal_jaloj = {r: None for a in achlajil for r in a.retal_jaloj()}
         rujunamil_ko_na = {
-            Rujunamil(r, [a.ruyonil for a in achlajil if a.meyuronil is r])
+            Rujunamil(r, [a.ruyonil for a in achlajil if a.meruyonil is r])
             for r in ruwuj_retal_jaloj
         }
         while len(rujunamil_ko_na):
             for rjnml in list(rujunamil_ko_na):
                 if all(ruwuj_retal_jaloj[r] is not None for r in rjnml.ruyonil):
                     jlj_pymc = rjnml.ruqaxik_pymc(ruwuj_retal_jaloj)
-                    ruwuj_retal_jaloj[rjnml.meyuronil] = jlj_pymc
+                    ruwuj_retal_jaloj[rjnml.meruyonil] = jlj_pymc
 
                     rujunamil_ko_na.remove(rjnml)

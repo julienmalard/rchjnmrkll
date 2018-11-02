@@ -2,6 +2,7 @@ import json
 import os
 
 import numpy as np
+import plotly.io as pio
 import plotly.offline as py
 import seaborn as sns
 from matplotlib.backends.backend_agg import FigureCanvasAgg as TelaFigura
@@ -74,26 +75,27 @@ def _wchbl_tunujuch(x, tzij, rubi, ochochibäl):
     fig.savefig(os.path.join(ochochibäl, rubi_wuj))
 
 
-def wchbl_sankey(tnjch, kutbäl, rxl_tzij, ochochibäl='', pa_rtl_jlj=None):
+def wchbl_sankey(tnjch, kutbäl, rxl_tzij, ochochibäl='', pa_rtl_jlj=None, kibi=None, rubi_lema='Sankey'):
     if isinstance(tnjch, str):
         tnjch = _rujaqïk_json(tnjch)
 
     if len(ochochibäl) and not os.path.isdir(ochochibäl):
         os.makedirs(ochochibäl)
 
-    rubi = "rutojtob'enïk"
-
     if pa_rtl_jlj is None:
-        _wchbl_sankey(tnjch, kutbäl, rubi=rubi, rxl_tzj=rxl_tzij, ochochibäl=ochochibäl)
+        _wchbl_sankey(tnjch, kutbäl, rubi=rubi_lema, rxl_tzj=rxl_tzij, ochochibäl=ochochibäl, kibi=kibi)
     else:
         for rjl, tnj in tnjch.items():
             _wchbl_sankey(
-                tnj, kutbäl, rubi=rubi + str(rjl), rxl_tzj=rxl_tzij, elesaj=pa_rtl_jlj, ochochibäl=ochochibäl
+                tnj, kutbäl, rubi=rubi_lema + str(rjl), rxl_tzj=rxl_tzij, elesaj=pa_rtl_jlj, ochochibäl=ochochibäl,
+                kibi=kibi
             )
 
 
-def _wchbl_sankey(tnjch, kutbäl, rubi, rxl_tzj, ochochibäl, elesaj=None):
-    retal_jaloj = [x for x in kutbäl.retal_jaloj() if str(x) != elesaj]
+def _wchbl_sankey(tnjch, kutbäl, rubi, rxl_tzj, ochochibäl, elesaj=None, kibi=None):
+    if kibi is None:
+        kibi = {}
+    retal_jaloj = sorted([x for x in kutbäl.retal_jaloj() if str(x) != elesaj], key=lambda x: str(x))
 
     achlajil = [a for a in kutbäl.achlajil if elesaj not in [str(a.ruyonil), str(a.meruyonil)]]
     ruxeel = np.array(
@@ -112,6 +114,9 @@ def _wchbl_sankey(tnjch, kutbäl, rubi, rxl_tzj, ochochibäl, elesaj=None):
         for ryn, mryn, rjl in zip(ruxeel, chuwäch, rajil)
     ]
 
+    # sachoj_kutbäl = [np.mean(tnjch[f'sg_{jlj}']) for jlj in retal_jaloj]
+
+    melil = np.sign(rajil)
     rajil = np.abs(rajil)
     rajil *= np.array([np.std(rxl_tzj[retal_jaloj[ryn]]) for ryn in ruxeel])
 
@@ -127,49 +132,58 @@ def _wchbl_sankey(tnjch, kutbäl, rubi, rxl_tzj, ochochibäl, elesaj=None):
                                             np.isin(chuwäch, [retal_jaloj.index(mryn) for mryn in jlj_mrynl])))
 
                 ]
-                rnmlm = 1 if not len(kinimilem_mrynl) else np.sum(kinimilem_mrynl * rjl)
+                rnmlm = 1 if not len(rjl) else np.sum(rjl)
                 runimilem[jlj] = rnmlm
+
+                r2 = 1  # jlj.r2(rxl_tzj, tnjch, ryn=[a.ruyonil for a in achlajil if a.meruyonil == jlj])
 
                 i_chw = np.where(chuwäch == i_jlj)
                 knjl = np.sum(rajil[i_chw])
-                rajil[i_chw] *= rnmlm / knjl
-    rubonil = [r for r in sns.color_palette('Dark2', len(retal_jaloj))]
-    rubonil_jlj = [f'rgb({int(r[0]*255)}, {int(r[1]*255)}, {int(r[2]*255)})' for r in rubonil]
+                rajil[i_chw] *= rnmlm / knjl * r2
+
+    rubonil = [r for r in sns.color_palette('Set1', len(retal_jaloj))]
+    rubonil_jlj = [f'rgba({int(r[0]*255)}, {int(r[1]*255)}, {int(r[2]*255)}, 0.7)' for r in rubonil]
 
     rubonil_achljl = [
         f'rgba({int(rubonil[j][0]*255)}, {int(rubonil[j][1]*255)}, {int(rubonil[j][2]*255)}, {a*.7})'
         for j, a in zip(ruxeel, alphas)
     ]
+
+    kibi_jaloj = [str(j) if str(j) not in kibi else kibi[str(j)] for j in retal_jaloj]
     tzij = dict(
         type='sankey',
         node=dict(
-            pad=15,
-            thickness=20,
+            pad=30,
+            thickness=40,
             line=dict(
                 color="black",
-                width=0.5
+                width=1
             ),
-            label=[str(j) for j in retal_jaloj],
+            label=kibi_jaloj,
             color=rubonil_jlj
         ),
         link=dict(
             source=ruxeel,
             target=chuwäch,
             value=rajil,
-            color=rubonil_achljl
+            color=rubonil_achljl,
+            label=['-' if x == -1 else '+' for x in melil],
         ))
     rbyl = dict(
         title=rubi,
         font=dict(
-            size=10
+            size=50,
+            family='Arial'
         )
     )
     wchbl = dict(data=[tzij], layout=rbyl)
-
-    py.plot(
-        wchbl, image='jpeg', filename=os.path.join(ochochibäl, rubi) + '.html', image_filename='rtjtbnk',
-        show_link=False, auto_open=False
-    )
+    try:
+        pio.write_image(wchbl, os.path.join(ochochibäl, rubi) + '.jpeg')
+    except ValueError:
+        py.plot(
+            wchbl, image='jpeg', filename=os.path.join(ochochibäl, rubi) + '.html', image_filename='sankey',
+            show_link=False, auto_open=False, image_width=1600 * 2, image_height=1000 * 2
+        )
 
 
 def _rujaqïk_json(rubi):

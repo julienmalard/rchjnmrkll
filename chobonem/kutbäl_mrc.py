@@ -26,6 +26,7 @@ ach_ryn_ixq = Achlajil(ruyon, ixöq)
 ach_mbl_ryn = Achlajil(mebail, ruyon)
 ach_mbl_kxl = Achlajil(mebail, kaxlan)
 ach_tjx_kxl = Achlajil(tijoxïk, kaxlan)
+ach_tjx_ixq = Achlajil(tijoxïk, ixöq)
 ach_kxl_ruq = Achlajil(kaxlan, ruqa)
 ach_kxt_ixq = Achlajil(kaxlan_tzij, ixöq)
 ach_ryn_kxl = Achlajil(ruyon, kaxlan)
@@ -60,7 +61,7 @@ tzij_iximulew = RuxeelTzij(
 ktbl.ruyaik_achlajil(
     [
         ach_mbl_ruq, ach_mbl_tjxk, ach_mbl_ixq, ach_ryn_ixq, ach_mbl_ryn, ach_mbl_kxl, ach_tjx_kxl, ach_tjx_ruq,
-        ach_kxl_ruq, ach_kxt_ixq, ach_ryn_kxl, ach_ixq_kxl, ach_ixq_ruq,
+        ach_kxl_ruq, ach_kxt_ixq, ach_ryn_kxl, ach_ixq_kxl, ach_ixq_ruq, ach_tjx_ixq,
         ach_kxt_kxl, ach_kxt_ruq, ach_tjx_kxt, ach_mbl_kxt, ach_mcr_ixq, ach_mcr_kxl, ach_mcr_kxt,
         ach_mcr_ruq, ach_mcr_mbl, ach_mbl_ruq
     ]

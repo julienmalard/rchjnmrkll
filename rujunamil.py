@@ -2,12 +2,12 @@ import pymc3 as pm
 
 
 class Rujunamil(object):
-    def __init__(ri, meyuronil, ruyonil):
-        ri.meyuronil = meyuronil
+    def __init__(ri, meruyonil, ruyonil):
+        ri.meruyonil = meruyonil
         ri.ruyonil = ruyonil
 
     def ruqaxik_pymc(ri, retal_jaloj):
-        jlj = ri.meyuronil
+        jlj = ri.meruyonil
         rnjml = None
         for rynl in ri.ruyonil:
             a = pm.Normal(
@@ -23,4 +23,4 @@ class Rujunamil(object):
         return jlj.ruqaxik_pymc(rnjml)
 
     def __str__(ri):
-        return str(ri.meyuronil)
+        return str(ri.meruyonil)
