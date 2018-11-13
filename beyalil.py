@@ -1,0 +1,2 @@
+class Beyalil(object):
+    pass

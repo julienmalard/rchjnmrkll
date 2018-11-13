@@ -14,7 +14,7 @@ kibi = {
 
 }
 
-wchbl_sankey("tunujuch'/pa_amaq_tnjch.json", ktbl, tzij_iximulew, "wchbl_amaq/sankey", kibi=kibi)
+# wchbl_sankey("tunujuch'/pa_amaq_tnjch.json", ktbl, tzij_iximulew, "wchbl_amaq/sankey", kibi=kibi)
 wchbl_sankey(
     "tunujuch'/pa_ruk'ojlem_tnjch_pa_rtl_jlj.json", ktbl, tzij_iximulew, "wchbl_ruk'ojnem/sankey", pa_rtl_jlj='ixöq',
     kibi=kibi

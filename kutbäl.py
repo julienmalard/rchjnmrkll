@@ -12,6 +12,8 @@ from wachibäl import wchbl_tunujuch, wchbl_sankey
 class KutbälPyMC(object):
     def __init__(ri):
         ri.achlajil = set()
+        ri.rujunamil = set()
+
         ri.tunujuch = None
         ri.tunujuch_pa_rtl_jlj = {}
 
