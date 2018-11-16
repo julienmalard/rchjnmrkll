@@ -6,7 +6,7 @@ class Rujunamil(object):
         ri.meruyonil = meruyonil
         ri.ruyonil = ruyonil
 
-    def ruqaxik_pymc(ri, retal_jaloj):
+    def ruqaxik_pymc(ri, retal_jaloj, rxl_tzj):
         jlj = ri.meruyonil
         rnjml = None
         for rynl in ri.ruyonil:
@@ -20,7 +20,7 @@ class Rujunamil(object):
             else:
                 rnjml = rnjml + a * retal_jaloj[rynl]
 
-        return jlj.ruqaxik_pymc(rnjml)
+        return jlj.ruqaxik_pymc(rnjml, rxl_tzj=rxl_tzj)
 
     def __str__(ri):
-        return str(ri.meruyonil)
+        return str(ri.meruyonil) + '~' + ' + '.join([str(j) for j in ri.ruyonil])

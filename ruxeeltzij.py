@@ -26,14 +26,6 @@ class RuxeelTzij(object):
 
         return wuj_pd
 
-    def ruyaik_tzij_jlj(ri, chuyu=None):
-        for rubi, j in ri.r_jlj.items():
-            if chuyu is None:
-                rajil = ri.tzij[rubi].values
-            else:
-                rajil = ri.tzij[rubi][ri[chuyu[0]] == chuyu[1]].values
-            j.ruyaik_tzij(rajil)
-
     def __getitem__(ri, wchnq):
         if isinstance(wchnq, str):
             return ri.tzij[wchnq].values

@@ -75,7 +75,7 @@ def _wchbl_tunujuch(x, tzij, rubi, ochochibäl):
     fig.savefig(os.path.join(ochochibäl, rubi_wuj))
 
 
-def wchbl_sankey(tnjch, kutbäl, rxl_tzij, ochochibäl='', pa_rtl_jlj=None, kibi=None, rubi_lema='Sankey'):
+def wchbl_sankey(tnjch, rujunamil, ochochibäl='', pa_rtl_jlj=None, kibi=None, rubi_lema='Sankey'):
     if isinstance(tnjch, str):
         tnjch = _rujaqïk_json(tnjch)
 
@@ -83,25 +83,27 @@ def wchbl_sankey(tnjch, kutbäl, rxl_tzij, ochochibäl='', pa_rtl_jlj=None, kibi
         os.makedirs(ochochibäl)
 
     if pa_rtl_jlj is None:
-        _wchbl_sankey(tnjch, kutbäl, rubi=rubi_lema, rxl_tzj=rxl_tzij, ochochibäl=ochochibäl, kibi=kibi)
+        _wchbl_sankey(tnjch, rujunamil, rubi=rubi_lema, ochochibäl=ochochibäl, kibi=kibi)
     else:
         for rjl, tnj in tnjch.items():
             _wchbl_sankey(
-                tnj, kutbäl, rubi=rubi_lema + str(rjl), rxl_tzj=rxl_tzij, elesaj=pa_rtl_jlj, ochochibäl=ochochibäl,
+                tnj, rujunamil, rubi=rubi_lema + str(rjl), elesaj=pa_rtl_jlj, ochochibäl=ochochibäl,
                 kibi=kibi
             )
 
 
-def _wchbl_sankey(tnjch, kutbäl, rubi, rxl_tzj, ochochibäl, elesaj=None, kibi=None):
+def _wchbl_sankey(tnjch, rujunamil, rubi, ochochibäl, elesaj=None, kibi=None):
     if kibi is None:
         kibi = {}
-    retal_jaloj = sorted([x for x in kutbäl.retal_jaloj() if str(x) != elesaj], key=lambda x: str(x))
 
-    achlajil = [a for a in kutbäl.achlajil if elesaj not in [str(a.ruyonil), str(a.meruyonil)]]
-    ruxeel = np.array(
-        [retal_jaloj.index(a.ruyonil) for a in achlajil])
+    retal_jaloj = [rjnml.meruyonil for rjnml in rujunamil]
+    retal_jaloj = sorted([x for x in retal_jaloj if str(x) != elesaj], key=lambda x: str(x))
+
+    ruxeel = np.array([
+        retal_jaloj.index(ryn) for rjnml in rujunamil for ryn in rjnml.ruyonil
+    ])
     chuwäch = np.array([
-        retal_jaloj.index(a.meruyonil) for a in achlajil
+        retal_jaloj.index(rjnml.meruyonil) for rjnml in rujunamil for _ in rjnml.ruyonil
     ])
 
     rajil = np.array([
@@ -118,13 +120,12 @@ def _wchbl_sankey(tnjch, kutbäl, rubi, rxl_tzj, ochochibäl, elesaj=None, kibi=
 
     melil = np.sign(rajil)
     rajil = np.abs(rajil)
-    rajil *= np.array([np.std(rxl_tzj[retal_jaloj[ryn]]) for ryn in ruxeel])
 
     runimilem = {jlj: None for jlj in retal_jaloj}
     while any(rnml is None for rnml in runimilem.values()):
         for jlj in [j for j in retal_jaloj if runimilem[j] is None]:
             i_jlj = retal_jaloj.index(jlj)
-            jlj_mrynl = [a.meruyonil for a in achlajil if a.ruyonil is jlj]
+            jlj_mrynl = [rjnml.meruyonil for rjnml in rujunamil if jlj in rjnml.ruyonil]
             kinimilem_mrynl = [runimilem[j] for j in jlj_mrynl]
             if all([nmlm is not None for nmlm in kinimilem_mrynl]):
                 rjl = rajil[
