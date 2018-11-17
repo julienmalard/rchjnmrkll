@@ -22,7 +22,7 @@ ach_mbl_ruq = Achlajil(mebail, ruqa)
 ach_mbl_tjx = Achlajil(mebail, tijoxïk)
 ach_tjx_ruq = Achlajil(tijoxïk, ruqa)
 ach_mbl_ixq = Achlajil(mebail, ixöq)
-ach_ixq_ryn = Achlajil(ixöq, ruyon)
+ach_ryn_ixq = Achlajil(ruyon, ixöq)
 ach_mbl_ryn = Achlajil(mebail, ruyon)
 ach_mbl_kxl = Achlajil(mebail, kaxlan)
 ach_tjx_kxl = Achlajil(tijoxïk, kaxlan)
@@ -48,7 +48,7 @@ tzij_iximulew = RuxeelTzij(
            "/Ruxe'el tzij roma SLAN.csv",
     r_jlj={
         'ISA': MCR,
-        'brecha.pobreza.gastos.norm': mebail,
+        'brecha.pobreza.gastos.norm2': mebail,
         'rural': ruqa,
         'educación.adultos': tijoxïk,
         'jefa.mujer': ixöq,
@@ -71,7 +71,7 @@ ktbl = KutbälPyMC(
         ach_tjx_ixq, ach_tjx_ruq, ach_tjx_kxl, ach_tjx_kxt,
 
         # Ixöq
-        ach_ixq_kxl, ach_ixq_ryn, ach_ixq_ruq,
+        ach_ixq_kxl, ach_ryn_ixq, ach_ixq_ruq,
 
         # Ruyon
         ach_ryn_kxl, ach_ryn_ruq,

@@ -51,14 +51,13 @@ class Beyalil(object):
         if not os.path.isdir(ochochibäl):
             os.makedirs(ochochibäl)
 
-        if ri.tunujuch is not None:
-            tnjch = {r_jlj: ri.tunujuch[r_jlj].tolist() for r_jlj in ri.tunujuch}
-            rb_tnjch = rubi + '_tnjch' + '.json'
+        tnjch = {r_jlj: ri.tunujuch[r_jlj].tolist() for r_jlj in ri.tunujuch}
+        rb_tnjch = rubi + '_tnjch' + '.json'
 
-            if ochochibäl is not None:
-                rb_tnjch = os.path.join(ochochibäl, rb_tnjch)
-            with open(rb_tnjch, 'w', encoding='utf8') as w:
-                json.dump(tnjch, w, ensure_ascii=False)
+        if ochochibäl is not None:
+            rb_tnjch = os.path.join(ochochibäl, rb_tnjch)
+        with open(rb_tnjch, 'w', encoding='utf8') as w:
+            json.dump(tnjch, w, ensure_ascii=False)
 
     def wachibäl(ri, ochochibäl='', rubeyal='tnjch'):
 
